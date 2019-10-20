@@ -3,6 +3,7 @@ Author : Koralp Catalsakal
 Date : 15/10/2019
 """
 
+import xgboost
 
 def clusterData(model_func = None, data = None , label = None):
 
@@ -28,3 +29,36 @@ def clusterData(model_func = None, data = None , label = None):
     else:
         result = model_func(data,label)
     return result
+
+def splitDataLabeled(nClusters,data,cluster_labels):
+
+    """
+
+    """
+
+    data_dict = {}
+    for i in range(nClusters):
+        data_dict['cluster{0}'.format(i)] = data[cluster_labels == i]
+    return data_dict
+
+def convertOriginalData(data_dict,X,y):
+    original_data_split = {}
+    for i, (key, val) in enumerate(data_dict.items()):
+        #print(val.index.values)
+        original_data_split['original_data_cluster{0}'.format(i)] = X.iloc[val.index.values]
+        original_data_split['original_label_cluster{0}'.format(i)] = y[val.index.values]
+    return original_data_split
+
+def trainMultipleModels(model_func,data_dict,option,params,**kwargs):
+
+    model_dict = {}
+    if option == 'XGBoost':
+        for i in range(len(data_dict.items())//2):
+            dtrain = xgboost.DMatrix(data_dict['original_data_cluster{}'.format(i)],label = data_dict['original_label_cluster{}'.format(i)])
+            eval = [(xgboost.DMatrix(data_dict['original_data_cluster{0}'.format(i)], label=data_dict['original_label_cluster{0}'.format(i)]), "train")]
+            model_dict['model{0}'.format(i)] = model_func(params,dtrain,evals = eval,**kwargs)
+    else:
+        print( 'eeee')
+        #for i, (k,v) in enumerate(data_dict.items()):
+            #model_dict['model{0}'.format(i)] = model_func(kwargs['params'],data_dict['original_data_cluster{}'.format(i)], data_dict['original_label_cluster{}'.format(i)],kwargs)
+    return model_dict
