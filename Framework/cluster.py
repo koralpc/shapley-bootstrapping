@@ -52,13 +52,16 @@ def convertOriginalData(data_dict,X,y):
 def trainMultipleModels(model_func,data_dict,option,params,**kwargs):
 
     model_dict = {}
+    eval_dict = {}
     if option == 'XGBoost':
         for i in range(len(data_dict.items())//2):
+            kwargs['evals_result'] = {}
             dtrain = xgboost.DMatrix(data_dict['original_data_cluster{}'.format(i)],label = data_dict['original_label_cluster{}'.format(i)])
             eval = [(xgboost.DMatrix(data_dict['original_data_cluster{0}'.format(i)], label=data_dict['original_label_cluster{0}'.format(i)]), "train")]
             model_dict['model{0}'.format(i)] = model_func(params,dtrain,evals = eval,**kwargs)
+            eval_dict['eval{0}'.format(i)] = kwargs['evals_result']
     else:
         print( 'eeee')
         #for i, (k,v) in enumerate(data_dict.items()):
             #model_dict['model{0}'.format(i)] = model_func(kwargs['params'],data_dict['original_data_cluster{}'.format(i)], data_dict['original_label_cluster{}'.format(i)],kwargs)
-    return model_dict
+    return model_dict,eval_dict
