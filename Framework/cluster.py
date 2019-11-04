@@ -41,7 +41,8 @@ def splitDataLabeled(nClusters,data,cluster_labels):
     data_dict = {}
     for i in range(nClusters):
         if type(data) == numpy.ndarray:
-            data_dict['cluster{0}'.format(i)] = pandas.DataFrame(data[cluster_labels == i])
+            data_df = pandas.DataFrame(data)
+            data_dict['cluster{0}'.format(i)] = data_df[cluster_labels == i]
         else:
             data_dict['cluster{0}'.format(i)] = data[cluster_labels == i]
     return data_dict
