@@ -28,13 +28,13 @@ def prepare_pipeline_data(X,y,test_proportion = 0.2,validation_proportion = 0.25
     X_test.drop(['index'],axis = 1,inplace = True)
 
     scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train = pd.DataFrame(scaler.transform(X_train),columns = X.columns)
-    X_test = pd.DataFrame(scaler.transform(X_test),columns = X.columns)
+    X_train = pd.DataFrame(scaler.transform(X_train.astype('float64')),columns = X.columns)
+    X_test = pd.DataFrame(scaler.transform(X_test.astype('float64')),columns = X.columns)
 
     scaler_y = preprocessing.StandardScaler().fit(y_train.reshape(-1,1))
 
-    y_train = scaler_y.transform(y_train.reshape(-1,1)).reshape(-1,)
-    y_test = scaler_y.transform(y_test.reshape(-1,1)).reshape(-1,)
+    y_train = scaler_y.transform(y_train.reshape(-1,1).astype('float64')).reshape(-1,)
+    y_test = scaler_y.transform(y_test.reshape(-1,1).astype('float64')).reshape(-1,)
 
     X_train_tr,X_train_val,y_train_tr,y_train_val = train_test_split(X_train,y_train,test_size = validation_proportion,random_state = 0)
 

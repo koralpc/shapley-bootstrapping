@@ -5,9 +5,23 @@ import shap
 
 #sys.path.append("..")
 
-def returnAlldatasets():
+def returnDataset(idx):
     dataset_holder = [admissions(),amazon(),boston(),crime(),diabetes(),fish_weights(),insurance(),nhanes(),nye_airbnb(),student_grades()]
-    return dataset_holder
+    X,y,name = dataset_holder[idx]
+    X.reset_index(inplace = True)
+
+    X.drop(['index'],axis = 1,inplace = True)
+    if name == 'Nhanes':
+        X.drop(['Unnamed: 0'],axis = 1,inplace = True)
+
+    ## Dropping NA values
+    drop_indexes = np.unique(np.where(X.isna())[0])
+    X.dropna(inplace = True)
+    mask = np.ones(len(y),dtype = bool)
+    mask[drop_indexes] = False
+    y = y[mask]
+
+    return X,y,name
 
 def boston():
     X,y = shap.datasets.boston()
