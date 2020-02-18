@@ -76,17 +76,17 @@ class ShapleyModel():
     def prepareTrainData(self,data_dict,data_dict_original,X_instanced,y_instanced,shap_instanced,no_val = True):
 
         if self.notebook_mode == 'Original' or self.notebook_mode == 'Original-NC':
-            split_data_original = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
-            split_data_shapley = cluster.convertOriginalData(data_dict,X_instanced,y_instanced,no_val)
+            split_data_original,y_org = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
+            split_data_shapley,y_shap = cluster.convertOriginalData(data_dict,X_instanced,y_instanced,no_val)
         elif self.notebook_mode =='Shapley' or self.notebook_mode == 'Shapley-NC':
-            split_data_original = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
-            split_data_shapley = cluster.convertOriginalData(data_dict,shap_instanced,y_instanced,no_val)
+            split_data_original,y_org = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
+            split_data_shapley,y_shap = cluster.convertOriginalData(data_dict,shap_instanced,y_instanced,no_val)
         else:
             print(self.notebook_mode == 'Original')
 
-        return split_data_original,split_data_shapley
+        return split_data_original,y_org,split_data_shapley,y_shap
 
-    def trainPredictor(self,data,no_val = True):
+    def trainPredictor(self,X,y,no_val = True):
 
         params = {
             "eta": 0.01,
@@ -105,9 +105,9 @@ class ShapleyModel():
         }
 
         if self.model_type == 'Linear':
-            model_dict,eval_results = cluster.trainMultipleModels(LinearRegression().fit,data,'LinearRegressor',params,no_val = False)
+            model_dict,eval_results = cluster.trainMultipleModels(LinearRegression().fit,X,y,'LinearRegressor',params,no_val = False)
         else:
-            model_dict,eval_results = cluster.trainMultipleModels(xgboost.train,data,'XGBoost',params,no_val = False,**kwargs)
+            model_dict,eval_results = cluster.trainMultipleModels(xgboost.train,X,y,'XGBoost',params,no_val = False,**kwargs)
 
         return model_dict,eval_results
 
@@ -121,10 +121,10 @@ class ShapleyModel():
             preds = {}
             if self.model_type == 'Linear':
                 for i in range(len(models)):
-                    preds['model{0}'.format(i)] = models['model{0}'.format(i)].predict(data['cluster{0}'.format(i)])
+                    preds['model{0}'.format(i)] = models['model{0}'.format(i)].predict(data[data['cluster'] == i].iloc[:,0:-1])
             else:
                 for i in range(len(models)):
-                    preds['model{0}'.format(i)] = models['model{0}'.format(i)].predict(xgboost.DMatrix(data['cluster{0}'.format(i)])).reshape(-1,1)
+                    preds['model{0}'.format(i)] = models['model{0}'.format(i)].predict(xgboost.DMatrix(data[data['cluster'] == i].iloc[:,0:-1])).reshape(-1,1)
         return preds
 
     def predictShapleyValues(self,data):
@@ -142,7 +142,7 @@ class ShapleyModel():
         else:
             for i in range(len(predictions)):
                 sizes.append(len(predictions['model{0}'.format(i)]))
-                rmse_array.append(np.sqrt(np.mean((predictions['model{0}'.format(i)]-target['label_cluster{0}'.format(i)])**2)))
+                rmse_array.append(np.sqrt(np.mean((predictions['model{0}'.format(i)]-target[target['cluster'] == i].iloc[:,0:-1])**2)))
             total_rmse = metrics.ensembleRMSE(sizes,rmse_array)
             return total_rmse
 
