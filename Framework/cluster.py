@@ -122,7 +122,6 @@ def trainMultipleModels(model_func,X,y,option,params,no_val = False,**kwargs):
                 eval_dict['eval{0}'.format(i)] = {'train': {'rmse': _calculate_accuracy(model_dict['model{0}'.format(i)].predict,X[X['cluster'] == i].iloc[:,0:-2],y[y['cluster'] == i].iloc[:,0])}}
     else:
         if option == 'XGBoost':
-
             """for i in range(len(data_dict.items())//6):
                 kwargs['evals_result'] = {}
                 dtrain = xgboost.DMatrix(data_dict['original_train_cluster{0}'.format(i)],label = data_dict['original_train_label_cluster{0}'.format(i)])
