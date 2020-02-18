@@ -75,10 +75,10 @@ class ShapleyModel():
 
     def prepareTrainData(self,data_dict,data_dict_original,X_instanced,y_instanced,shap_instanced,no_val = True):
 
-        if self.notebook_mode == 'Original' or self.notebook_mode == 'Original-NC':
+        if self.notebook_mode == 'Original' or self.notebook_mode == 'Original-PCA':
             split_data_original,y_org = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
             split_data_shapley,y_shap = cluster.convertOriginalData(data_dict,X_instanced,y_instanced,no_val)
-        elif self.notebook_mode =='Shapley' or self.notebook_mode == 'Shapley-NC':
+        elif self.notebook_mode =='Shapley' or self.notebook_mode == 'Shapley-PCA':
             split_data_original,y_org = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
             split_data_shapley,y_shap = cluster.convertOriginalData(data_dict,shap_instanced,y_instanced,no_val)
         else:
