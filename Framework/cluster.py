@@ -37,6 +37,17 @@ def clusterData(model_func = None, data = None , label = None):
 def splitDataLabeled(nClusters,data,cluster_labels):
 
     """
+    Concatenates cluster labels as an extra column to the existing DataFrame
+
+    Args:
+
+        data(pandas.DataFrame) : Data to be used in training(Without the ground truth data)
+
+        cluster_labels(numpy.ndarray or pandas.DataFrame) : Cluster assignments of each index stored in array format.
+
+    Returns:
+        data_df(pandas.DataFrame) : Returns data with `cluster` column added
+
 
     """
 
@@ -56,6 +67,27 @@ def splitDataLabeled(nClusters,data,cluster_labels):
     return data_df
 
 def convertOriginalData(data_dict,X,y,no_val = False):
+
+    """
+    Adds the train/validation set split assignment to the DataFrame.
+
+    Args:
+        data_dict(pandas.DataFrame) : Data with cluster assignments
+
+        X(pandas.DataFrame) : DataFrame that holds indexes of training and validation instances
+
+        y(pandas.DataFrame) : Target labels corresponding to training and validation instances
+
+        no_val(bool) : default is `False`. If `False`, all instances are used as training instances, and no validation split is used. Otherwise data is split
+
+    Returns:
+        data_new(pandas.DataFrame) : training data with train/validation split instances
+
+        data_new(pandas.DataFrame) : label data with train/validation split instances
+    """
+
+
+
     """
     original_data_split = {}
     if no_val:
