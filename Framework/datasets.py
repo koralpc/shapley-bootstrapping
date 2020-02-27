@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 import sys
 import shap
+from openml import datasets
+
 
 #sys.path.append("..")
 
 def returnDataset(idx):
-    dataset_holder = [admissions(),amazon(),boston(),crime(),diabetes(),fish_weights(),insurance(),nhanes(),nye_airbnb(),student_grades()]
+    dataset_holder = [admissions(),amazon(),boston(),crime(),diabetes(),fish_weights(),insurance(),nhanes(),nye_airbnb(),student_grades(),liver_disorder()]
     X,y,name = dataset_holder[idx]
     X.reset_index(inplace = True)
 
@@ -115,4 +117,12 @@ def insurance():
     X = insurance_df.drop('charges',axis = 1)
     y = np.array(insurance_df['charges'])
     name = 'Insurance'
+    return X,y,name
+
+
+def liver_disorder():
+    data,_,_,_ = datasets.get_dataset(8).get_data()
+    X = data.iloc[:,:-1]
+    y = np.array(data.iloc[:,-1])
+    name = 'Liver_Disorder'
     return X,y,name

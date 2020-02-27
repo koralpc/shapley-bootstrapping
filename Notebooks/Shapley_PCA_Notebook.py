@@ -47,14 +47,14 @@ X,y,name = datasets.returnDataset(dataset_count)
 
 blackbox_model = ShapleyModel(explainer_type,model_type,nClusters,notebook_mode)
 
-X_train_pca,X_train_tr_pca,X_train_val_pca,X_test_pca,y_train_pca,y_train_tr_pca,y_train_val_pca,y_test_pca = processing.prepare_pipeline_reduced_data(X,y,PCA(3))
+X_train_pca,X_train_tr_pca,X_train_val_pca,X_test_pca,y_train_pca,y_train_tr_pca,y_train_val_pca,y_test_pca = processing.prepare_pipeline_reduced_data(X,y,PCA(2))
 X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test = processing.prepare_pipeline_data(X,y)
 
 shap_values = blackbox_model.explainShapley(X_train,y_train,X_train_tr,y_train_tr,X_train_val,y_train_val)
 shap_dataframe = pd.DataFrame(data = shap_values,columns = X_train.columns)
 
-shap_dataframe_pca,explained_var_shap = processing.dimensional_reduce(PCA(n_components = 3),shap_dataframe)
-shap_dataframe_tsne,explained_var_tsne = processing.dimensional_reduce(TSNE(n_components= 3),shap_dataframe)
+shap_dataframe_pca,explained_var_shap = processing.dimensional_reduce(PCA(n_components = 2),shap_dataframe)
+shap_dataframe_tsne,explained_var_tsne = processing.dimensional_reduce(TSNE(n_components=2),shap_dataframe)
 
 X_instanced = pd.concat((X_train_pca,pd.DataFrame(columns = ['instance'])),axis = 1)
 X_instanced['instance'].iloc[X_train_tr.index] = 'train'
@@ -77,6 +77,7 @@ y_train_df = pd.DataFrame(y_train)
 original_split,y_org,original_split_shapley,y_shap = blackbox_model.prepareTrainData(data_dict,data_dict_original,X_instanced,y_instanced,shap_instanced,False)
 
 
+
 model_dict,eval_results = blackbox_model.trainPredictor(original_split,y_org)
 model_dict_shapley,eval_results_shapley = blackbox_model.trainPredictor(original_split_shapley,y_shap)
 
@@ -85,7 +86,7 @@ model_dict_shapley,eval_results_shapley = blackbox_model.trainPredictor(original
 
 
 shapley_test = blackbox_model.predictShapleyValues(X_test)
-shap_test_pca,_ = processing.dimensional_reduce(PCA(n_components = 3),shapley_test)
+shap_test_pca,_ = processing.dimensional_reduce(PCA(n_components = 2),shapley_test)
 shapley_test_df = pd.DataFrame(shap_test_pca,columns = X_train_pca.columns)
 data_dict_shapley_test= blackbox_model.clusterDataTest(shap_dataframe_pca,kmeans_shapley.labels_,shapley_test_df)
 data_dict_original_test= blackbox_model.clusterDataTest(X_train_pca,kmeans_original.labels_,X_test_pca)
@@ -125,8 +126,6 @@ tot_rmse_big = blackbox_model.evaluate(preds_big,y_test_pca)
 
 
 # In[17]:
-
-print(blackbox_model.notebook_mode)
 
 
 names = ['Whole model','Original_ensemble','Shapley_ensemble']
