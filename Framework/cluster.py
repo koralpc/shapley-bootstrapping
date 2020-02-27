@@ -115,12 +115,13 @@ def convertOriginalData(data_dict,X,y,no_val = False):
             original_data_split['original_test_label_cluster{0}'.format(i)] = original_data_split['original_test_label_cluster{0}'.format(i)].drop(columns = 'instance')
     """
     if no_val:
-        data_new = data_dict.copy()
+        data_new = X.copy()
+        data_new['cluster'] = data_dict['cluster']
         y_new = y.copy()
         y_new['cluster'] = data_dict['cluster']
     else:
-        data_new = data_dict.copy()
-        data_new['instance'] = X['instance']
+        data_new = X.copy()
+        data_new['cluster'] = data_dict['cluster']
         #data_dict['instance'] = X['instance']
         y_new = y.copy()
         y_new['cluster'] = data_dict['cluster']
@@ -164,16 +165,21 @@ def trainMultipleModels(model_func,X,y,option,params,no_val = False,**kwargs):
             kwargs['evals_result'] = {}
             for i in range(len(numpy.unique(X['cluster']))):
                 dtrain = xgboost.DMatrix(X[(X['cluster'] == i) & (X['instance'] == 'train')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'train')].iloc[:,0])
-                eval = [(xgboost.DMatrix(X[(X['cluster'] == i) & (X['instance'] == 'train')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'train')].iloc[:,0]), "train"),
-                (xgboost.DMatrix(X[(X['cluster'] == i) & (X['instance'] == 'val')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'val')].iloc[:,0]), "val")]
-                model_dict['model{0}'.format(i)] = xgboost.train(params,dtrain,evals = eval,**kwargs)
-                eval_dict['eval{0}'.format(i)] = kwargs['evals_result']
+                if not y[(y['cluster'] == i) & (y['instance'] == 'val')].iloc[:,0].empty:
+                    eval = [(xgboost.DMatrix(X[(X['cluster'] == i) & (X['instance'] == 'train')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'train')].iloc[:,0]), "train"),
+                        (xgboost.DMatrix(X[(X['cluster'] == i) & (X['instance'] == 'val')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'val')].iloc[:,0]), "val")]
+                    model_dict['model{0}'.format(i)] = xgboost.train(params,dtrain,evals = eval,**kwargs)
+                    eval_dict['eval{0}'.format(i)] = kwargs['evals_result']
+                else:
+                    eval = [(xgboost.DMatrix(X[(X['cluster'] == i) & (X['instance'] == 'train')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'train')].iloc[:,0]), "train")]
+                    model_dict['model{0}'.format(i)] = xgboost.train(params,dtrain,evals = eval,**kwargs)
+                    eval_dict['eval{0}'.format(i)] = kwargs['evals_result']
 
         elif option == 'LinearRegressor':
-            for i in range(len(data_dict.items())//6):
+            for i in range(len(numpy.unique(X['cluster']))):
                 model_dict['model{0}'.format(i)] = LinearRegression().fit(X[(X['cluster'] == i) & (X['instance'] == 'train')].iloc[:,0:-2], y[(y['cluster'] == i) & (y['instance'] == 'train')].iloc[:,0],**kwargs)
                 eval_dict['eval{0}'.format(i)] = {'train': {'rmse': _calculate_accuracy(model_dict['model{0}'.format(i)].predict,X[(X['cluster'] == i) & (X['instance'] == 'train')].iloc[:,0:-2], y[(y['cluster'] == i) & (y['instance'] == 'train')].iloc[:,0])},
-                'test': {'rmse': _calculate_accuracy(model_dict['model{0}'.format(i)].predict,X[(X['cluster'] == i) & (X['instance'] == 'val')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'val')].iloc[:,0])}}
+                'val': {'rmse': _calculate_accuracy(model_dict['model{0}'.format(i)].predict,X[(X['cluster'] == i) & (X['instance'] == 'val')].iloc[:,0:-2],label =  y[(y['cluster'] == i) & (y['instance'] == 'val')].iloc[:,0])}}
 
     return model_dict,eval_dict
 

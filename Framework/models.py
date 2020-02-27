@@ -45,7 +45,7 @@ class ShapleyModel():
         if self.explainer_type == 'Linear':
             whole_model = LinearRegression().fit(X_exp, y_exp)
         else:
-            eval = [(xgboost.DMatrix(X_train, label=y_train),"train"),(xgboost.DMatrix(X_val, label=y_val),"test"),]
+            eval = [(xgboost.DMatrix(X_train, label=y_train),"train"),(xgboost.DMatrix(X_val, label=y_val),"val"),]
             whole_model = xgboost.train(params, xgboost.DMatrix(X_train, label=y_train),evals = eval,**kwargs)
 
         if self.explainer_type == 'Linear':
@@ -141,8 +141,9 @@ class ShapleyModel():
             return np.sqrt(np.mean((predictions-target)**2))
         else:
             for i in range(len(predictions)):
-                sizes.append(len(predictions['model{0}'.format(i)]))
-                rmse_array.append(np.sqrt(np.mean((predictions['model{0}'.format(i)]-target[target['cluster'] == i].iloc[:,0:-1])**2)))
+                if not len(predictions['model{0}'.format(i)]) == 0:
+                    sizes.append(len(predictions['model{0}'.format(i)]))
+                    rmse_array.append(np.sqrt(np.mean((predictions['model{0}'.format(i)]-target[target['cluster'] == i].iloc[:,0:-1])**2)))
             total_rmse = metrics.ensembleRMSE(sizes,rmse_array)
             return total_rmse
 
@@ -165,6 +166,6 @@ class ShapleyModel():
         if self.explainer_type == 'Linear':
             model = LinearRegression().fit(X_train, y_train)
         else:
-            eval = [(xgboost.DMatrix(X_train, label=y_train),"train"),(xgboost.DMatrix(X_val, label=y_val),"test")]
+            eval = [(xgboost.DMatrix(X_train, label=y_train),"train"),(xgboost.DMatrix(X_val, label=y_val),"val")]
             model = xgboost.train(params, xgboost.DMatrix(X_train, label=y_train),evals = eval,**kwargs)
         return model
