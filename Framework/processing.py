@@ -19,30 +19,34 @@ def dimensional_reduce(method,data):
         explained_variance = 0
     return transformed_data,explained_variance
 
-
-
 def prepare_pipeline_data(X,y,test_proportion = 0.2,validation_proportion = 0.25):
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_proportion, random_state=0)
 
-    X_train.reset_index(inplace = True)
-    X_train.drop(['index'],axis = 1,inplace = True)
-    X_test.reset_index(inplace = True)
-    X_test.drop(['index'],axis = 1,inplace = True)
-    print(X_train)
+#    X_train.reset_index(inplace = True)
+#    X_train.drop(['index'],axis = 1,inplace = True)
+#    X_test.reset_index(inplace = True)
+#    X_test.drop(['index'],axis = 1,inplace = True)
 
     scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train = pd.DataFrame(scaler.transform(X_train.astype('float64')),columns = X.columns)
-    X_test = pd.DataFrame(scaler.transform(X_test.astype('float64')),columns = X.columns)
+    X_train = pd.DataFrame(scaler.transform(X_train.astype('float64')))
+    X_test = pd.DataFrame(scaler.transform(X_test.astype('float64')))
 
-    scaler_y = preprocessing.StandardScaler().fit(y_train.reshape(-1,1))
 
-    y_train = scaler_y.transform(y_train.reshape(-1,1).astype('float64')).reshape(-1,)
-    y_test = scaler_y.transform(y_test.reshape(-1,1).astype('float64')).reshape(-1,)
+    #scaler_y = preprocessing.StandardScaler().fit(y_train.reshape(-1,1))
+
+    #y_train = scaler_y.transform(y_train.reshape(-1,1).astype('float64')).reshape(-1,)
+    #y_test = scaler_y.transform(y_test.reshape(-1,1).astype('float64')).reshape(-1,)
+
+#    scaler_y = preprocessing.StandardScaler().fit(y_train)
+
+#    y_train = scaler_y.transform(y_train.astype('float64')).reshape(-1,)
+#    y_test = scaler_y.transform(y_test.astype('float64')).reshape(-1,)
+
 
     X_train_tr,X_train_val,y_train_tr,y_train_val = train_test_split(X_train,y_train,test_size = validation_proportion,random_state = 0)
 
-    return X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test
+    return X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test,scaler
 
 
 def prepare_pipeline_reduced_data(X,y,method,test_proportion = 0.2,validation_proportion = 0.25):
@@ -69,3 +73,18 @@ def prepare_pipeline_reduced_data(X,y,method,test_proportion = 0.2,validation_pr
         X_train_tr,X_train_val,y_train_tr,y_train_val = train_test_split(X_train,y_train,test_size = validation_proportion,random_state = 0)
 
         return X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test
+
+def reduce_after_clusters(method,data):
+    data_attributes = data.iloc[:,:-2]
+    transformed_data = method.fit_transform(data_attributes)
+    transformed_data = pd.DataFrame(transformed_data)
+    try:
+        explained_variance = method.explained_variance_ratio_.sum()
+    except AttributeError:
+        explained_variance = 0
+    try:
+        transformed_data['instance'] = data['instance']
+    except KeyError:
+        pass
+    transformed_data['cluster'] = data['cluster']
+    return transformed_data,explained_variance

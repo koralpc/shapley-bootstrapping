@@ -6,7 +6,7 @@
 
 import sys
 import os
-sys.path.append("..")
+#sys.path.append("..")
 import shap
 import xgboost
 import seaborn as sns
@@ -33,12 +33,18 @@ from Framework import processing
 print(os.getcwd())
 
 shap.initjs()
-
+"""
 notebook_mode = sys.argv[1]
 explainer_type = sys.argv[2]
 model_type = sys.argv[3]
 nClusters = int(sys.argv[4])
 dataset_count = int(sys.argv[5])
+"""
+notebook_mode ='Original'
+explainer_type = 'XGBoost'
+model_type = 'XGBoost'
+nClusters = 3
+dataset_count = 3
 
 X,y,name = datasets.returnDataset(dataset_count)
 
@@ -53,8 +59,9 @@ X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test = pr
 shap_values = blackbox_model.explainShapley(X_train,y_train,X_train_tr,y_train_tr,X_train_val,y_train_val)
 shap_dataframe = pd.DataFrame(data = shap_values,columns = X_train.columns)
 
-shap_dataframe_pca,explained_var_shap = processing.dimensional_reduce(PCA(n_components = 2),shap_dataframe)
-shap_dataframe_tsne,explained_var_tsne = processing.dimensional_reduce(TSNE(n_components=2),shap_dataframe)
+#shap_dataframe_pca,explained_var_shap = processing.dimensional_reduce(PCA(n_components = 2),shap_dataframe)
+#shap_dataframe_tsne,explained_var_tsne = processing.dimensional_reduce(TSNE(n_components=2),shap_dataframe)
+shap_dataframe_pca = shap_dataframe
 
 X_instanced = pd.concat((X_train_pca,pd.DataFrame(columns = ['instance'])),axis = 1)
 X_instanced['instance'].iloc[X_train_tr.index] = 'train'

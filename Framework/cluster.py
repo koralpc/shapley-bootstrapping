@@ -114,20 +114,30 @@ def convertOriginalData(data_dict,X,y,no_val = False):
             original_data_split['original_train_label_cluster{0}'.format(i)] = original_data_split['original_train_label_cluster{0}'.format(i)].drop(columns = 'instance')
             original_data_split['original_test_label_cluster{0}'.format(i)] = original_data_split['original_test_label_cluster{0}'.format(i)].drop(columns = 'instance')
     """
-    if no_val:
-        data_new = X.copy()
-        data_new['cluster'] = data_dict['cluster']
-        y_new = y.copy()
-        y_new['cluster'] = data_dict['cluster']
+    if y is not None:
+        if no_val:
+            data_new = X.copy()
+            data_new['cluster'] = data_dict['cluster']
+            y_new = y.copy()
+            y_new['cluster'] = data_dict['cluster']
+        else:
+            data_new = X.copy()
+            data_new['cluster'] = data_dict['cluster']
+            #data_dict['instance'] = X['instance']
+            y_new = y.copy()
+            y_new['cluster'] = data_dict['cluster']
+            y_new['instance'] = X['instance']
+        return data_new,y_new
     else:
-        data_new = X.copy()
-        data_new['cluster'] = data_dict['cluster']
-        #data_dict['instance'] = X['instance']
-        y_new = y.copy()
-        y_new['cluster'] = data_dict['cluster']
-        y_new['instance'] = X['instance']
-
-    return data_new,y_new
+        if no_val:
+            data_new = X.copy()
+            data_new = pandas.DataFrame(data_new)
+            data_new['cluster'] = data_dict['cluster']
+        else:
+            data_new = X.copy()
+            data_new = pandas.DataFrame(data_new)
+            data_new['cluster'] = data_dict['cluster']
+        return data_new
 
 def trainMultipleModels(model_func,X,y,option,params,no_val = False,**kwargs):
 
