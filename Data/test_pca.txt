@@ -90,4 +90,4 @@ Insurance,0.961,0.986,0.715,3,Original-PCA,Linear,XGBoost
 Nhanes,0.999,0.983,0.833,3,Original-PCA,Linear,XGBoost
 NYE_Airbnb,0.895,0.895,0.898,3,Original-PCA,Linear,XGBoost
 Student_grades,0.538,0.694,0.784,3,Original-PCA,Linear,XGBoost
-Student_grades,0.542,0.668,0.560,3,Original-PCA,Linear,XGBoost
+Amazon,186.666,164.017,192.728,3,Original-PCA,Linear,XGBoost

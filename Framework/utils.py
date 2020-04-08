@@ -37,34 +37,17 @@ def dimensional_reduce(method,data):
         explained_variance = 0
     return transformed_data,explained_variance
 
-def prepare_pipeline_data(X,y,test_proportion = 0.2,validation_proportion = 0.25):
+def prepare_pipeline_data(X,y,test_proportion = 0.25):
+    X = preprocessing.StandardScaler().fit_transform(X)
+    #y = preprocessing.StandardScaler().fit_transform(y.reshape(-1,1))
+    X = pd.DataFrame(X)
+    X_train,X_test,y_train,y_test = train_test_split(X,y, test_size = test_proportion,random_state = 42)
+    X_train.reset_index(inplace = True)
+    X_train.drop(['index'],axis = 1,inplace = True)
+    X_test.reset_index(inplace = True)
+    X_test.drop(['index'],axis = 1,inplace = True)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_proportion, random_state=0)
-
-#    X_train.reset_index(inplace = True)
-#    X_train.drop(['index'],axis = 1,inplace = True)
-#    X_test.reset_index(inplace = True)
-#    X_test.drop(['index'],axis = 1,inplace = True)
-
-    scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train = pd.DataFrame(scaler.transform(X_train.astype('float64')))
-    X_test = pd.DataFrame(scaler.transform(X_test.astype('float64')))
-
-
-    #scaler_y = preprocessing.StandardScaler().fit(y_train.reshape(-1,1))
-
-    #y_train = scaler_y.transform(y_train.reshape(-1,1).astype('float64')).reshape(-1,)
-    #y_test = scaler_y.transform(y_test.reshape(-1,1).astype('float64')).reshape(-1,)
-
-#    scaler_y = preprocessing.StandardScaler().fit(y_train)
-
-#    y_train = scaler_y.transform(y_train.astype('float64')).reshape(-1,)
-#    y_test = scaler_y.transform(y_test.astype('float64')).reshape(-1,)
-
-
-    X_train_tr,X_train_val,y_train_tr,y_train_val = train_test_split(X_train,y_train,test_size = validation_proportion,random_state = 0)
-
-    return X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test,scaler
+    return X_train,X_test,y_train,y_test
 
 
 def prepare_pipeline_reduced_data(X,y,method,test_proportion = 0.2,validation_proportion = 0.25):
@@ -127,3 +110,24 @@ def clear_nan(X,y):
         X.drop(['index'],axis = 1,inplace = True)
         X.dropna(inplace = True)
         return X,None
+
+
+def get_branch_best(dataframe,*branchs):
+    branch_output = []
+    for branch in branchs:
+        branch_mins = dataframe.groupby('Dataset_name').agg({branch : min})
+        branch_output.append(branch_mins)
+    return branch_output
+
+
+def set_branch_best(dataframe,*branchs):
+    branch_best_performance = get_branch_best(dataframe,*branchs)
+    dataframe_temp = dataframe.copy()
+    for i,branch in enumerate(branchs):
+        branch_best = branch_best_performance[i]
+        for j in range(len(dataframe_temp['Dataset_name'])):
+            dataframe_temp[branch].iloc[j] = branch_best.loc[dataframe_temp['Dataset_name'].iloc[j]][0]
+    return dataframe_temp
+
+
+#def calculate_percentage_improvement(dataframe,*branchs)

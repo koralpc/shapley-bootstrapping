@@ -47,8 +47,8 @@ X,y,name = datasets.returnDataset(dataset_count)
 
 blackbox_model = ShapleyModel(explainer_type,model_type,nClusters,notebook_mode)
 
-X_train_pca,X_train_tr_pca,X_train_val_pca,X_test_pca,y_train_pca,y_train_tr_pca,y_train_val_pca,y_test_pca = processing.prepare_pipeline_reduced_data(X,y,PCA(3))
-X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test = processing.prepare_pipeline_data(X,y)
+#X_train_pca,X_train_tr_pca,X_train_val_pca,X_test_pca,y_train_pca,y_train_tr_pca,y_train_val_pca,y_test_pca = processing.prepare_pipeline_reduced_data(X,y,PCA(3))
+X_train,X_train_tr,X_train_val,X_test,y_train,y_train_tr,y_train_val,y_test,_ = processing.prepare_pipeline_data(X,y)
 
 shap_values = blackbox_model.explainShapley(X_train,y_train,X_train_tr,y_train_tr,X_train_val,y_train_val)
 shap_dataframe = pd.DataFrame(data = shap_values,columns = X_train.columns)
@@ -56,10 +56,10 @@ shap_dataframe = pd.DataFrame(data = shap_values,columns = X_train.columns)
 shap_dataframe_pca,explained_var_shap = processing.dimensional_reduce(PCA(n_components = 3),shap_dataframe)
 shap_dataframe_tsne,explained_var_tsne = processing.dimensional_reduce(TSNE(n_components= 3),shap_dataframe)
 
-X_instanced = pd.concat((X_train_pca,pd.DataFrame(columns = ['instance'])),axis = 1)
+X_instanced = pd.concat((X_train,pd.DataFrame(columns = ['instance'])),axis = 1)
 X_instanced['instance'].iloc[X_train_tr.index] = 'train'
 X_instanced['instance'].iloc[X_train_val.index] = 'val'
-y_instanced = pd.concat((pd.DataFrame(y_train_pca,columns=['label']),pd.DataFrame(columns = ['instance'])),axis = 1)
+y_instanced = pd.concat((pd.DataFrame(y_train,columns=['label']),pd.DataFrame(columns = ['instance'])),axis = 1)
 y_instanced['instance'].iloc[X_train_tr.index] = 'train'
 y_instanced['instance'].iloc[X_train_val.index] = 'val'
 
@@ -71,7 +71,7 @@ shap_instanced['instance'].loc[X_train_val.index] = 'val'
 
 
 #Split the clusters into a dictionary
-data_dict,data_dict_original,kmeans_shapley,kmeans_original = blackbox_model.clusterData(X_train_pca,shap_dataframe_pca)
+data_dict,data_dict_original,kmeans_shapley,kmeans_original = blackbox_model.clusterData(X_train,shap_dataframe_pca)
 
 y_train_df = pd.DataFrame(y_train)
 original_split,y_org,original_split_shapley,y_shap = blackbox_model.prepareTrainData(data_dict,data_dict_original,X_instanced,y_instanced,shap_instanced,False)
@@ -86,16 +86,16 @@ model_dict_shapley,eval_results_shapley = blackbox_model.trainPredictor(original
 
 shapley_test = blackbox_model.predictShapleyValues(X_test)
 shap_test_pca,_ = processing.dimensional_reduce(PCA(n_components = 3),shapley_test)
-shapley_test_df = pd.DataFrame(shap_test_pca,columns = X_train_pca.columns)
+shapley_test_df = pd.DataFrame(shap_test_pca)
 data_dict_shapley_test= blackbox_model.clusterDataTest(shap_dataframe_pca,kmeans_shapley.labels_,shapley_test_df)
-data_dict_original_test= blackbox_model.clusterDataTest(X_train_pca,kmeans_original.labels_,X_test_pca)
+data_dict_original_test= blackbox_model.clusterDataTest(X_train,kmeans_original.labels_,X_test)
 
 
 # In[11]:
 
 
-y_test_df = pd.DataFrame(y_test_pca)
-original_split_test,y_test_org,original_split_shapley_test,y_test_shap = blackbox_model.prepareTrainData(data_dict_shapley_test,data_dict_original_test,X_test_pca,y_test_df,shapley_test_df,True)
+y_test_df = pd.DataFrame(y_test)
+original_split_test,y_test_org,original_split_shapley_test,y_test_shap = blackbox_model.prepareTrainData(data_dict_shapley_test,data_dict_original_test,X_test,y_test_df,shapley_test_df,True)
 
 
 preds_org = blackbox_model.predict(original_split_test,model_dict)
@@ -112,16 +112,16 @@ tot_rmse_shap = blackbox_model.evaluate(preds_shap,y_test_shap)
 # In[15]:
 
 
-y_train_tr = pd.DataFrame(y_train_tr_pca,index = X_train_tr_pca.index)
-y_train_val = pd.DataFrame(y_train_val_pca,index = X_train_val_pca.index)
-X_train_tr_pca.sort_index(inplace = True)
+y_train_tr = pd.DataFrame(y_train_tr,index = X_train_tr.index)
+y_train_val = pd.DataFrame(y_train_val,index = X_train_val.index)
+X_train_tr.sort_index(inplace = True)
 y_train_tr.sort_index(inplace = True)
-X_train_val_pca.sort_index(inplace = True)
+X_train_val.sort_index(inplace = True)
 y_train_val.sort_index(inplace = True)
 
-exp_model = blackbox_model.trainExtraModel(X_train_tr_pca,y_train_tr.iloc[:,0],X_train_val_pca,y_train_val.iloc[:,0])
-preds_big = blackbox_model.predict(X_test_pca,exp_model)
-tot_rmse_big = blackbox_model.evaluate(preds_big,y_test_pca)
+exp_model = blackbox_model.trainExtraModel(X_train_tr,y_train_tr.iloc[:,0],X_train_val,y_train_val.iloc[:,0])
+preds_big = blackbox_model.predict(X_test,exp_model)
+tot_rmse_big = blackbox_model.evaluate(preds_big,y_test)
 
 
 # In[17]:
