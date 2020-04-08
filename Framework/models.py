@@ -86,11 +86,25 @@ class ShapleyModel():
 
         return split_data_original,y_org,split_data_shapley,y_shap
 
+
+    def prepareTestData(self,data_dict,X_instanced,shap_instanced,y_instanced = None,no_val = True):
+
+        if self.notebook_mode == 'Original' or self.notebook_mode == 'Original-PCA':
+            #split_data_original = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
+            split_data_shapley = cluster.convertOriginalData(data_dict,X_instanced,y_instanced,no_val)
+        elif self.notebook_mode =='Shapley' or self.notebook_mode == 'Shapley-PCA':
+            #split_data_original = cluster.convertOriginalData(data_dict_original,X_instanced,y_instanced,no_val)
+            split_data_shapley = cluster.convertOriginalData(data_dict,shap_instanced,y_instanced,no_val)
+        else:
+            print(self.notebook_mode == 'Original')
+
+        return split_data_shapley
+
     def trainPredictor(self,X,y,no_val = True):
 
         params = {
             "eta": 0.01,
-            "max_depth": 1,
+            "max_depth": 3,
             "objective": "reg:squarederror",
             "subsample": 0.5,
             "eval_metric": "rmse"
@@ -127,6 +141,23 @@ class ShapleyModel():
                     preds['model{0}'.format(i)] = models['model{0}'.format(i)].predict(xgboost.DMatrix(data[data['cluster'] == i].iloc[:,0:-1])).reshape(-1,1)
         return preds
 
+    def predictRow(self,data,models):
+        if type(models) != dict:
+            if self.explainer_type == 'Linear':
+                preds = models.predict(data)
+            else:
+                preds = models.predict(xgboost.DMatrix(data))
+        else:
+            if self.model_type == 'Linear':
+                preds =  models['model{0}'.format(int(data['cluster']))].predict(data[:-1])
+            else:
+                #print(data[:-1])
+                #print(data_types)
+                data_modified = pd.DataFrame(data = data[:-1])
+                data_modified = data_modified.transpose()
+                preds = models['model{0}'.format(int(data['cluster']))].predict(xgboost.DMatrix(data_modified))
+        return preds[0]
+
     def predictShapleyValues(self,data):
         if self.explainer_type == 'Linear':
             shap_values = self.explainer.shap_values(data)
@@ -150,7 +181,7 @@ class ShapleyModel():
     def trainExtraModel(self,X_train,y_train,X_val,y_val):
         params = {
             "eta": 0.01,
-            "max_depth": 1,
+            "max_depth": 3,
             "objective": "reg:squarederror",
             "subsample": 0.5,
             "eval_metric": "rmse"

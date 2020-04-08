@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Shapley-ML 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-Framework.building_blocks"></span><dl class="class">
+<dt id="Framework.building_blocks.ClusterBlock">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.building_blocks.</code><code class="sig-name descname">ClusterBlock</code><span class="sig-paren">(</span><em class="sig-param">nClusters</em>, <em class="sig-param">training_set_model</em>, <em class="sig-param">test_set_model</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.building_blocks.ClusterBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.building_blocks.EnsembleBlock">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.building_blocks.</code><code class="sig-name descname">EnsembleBlock</code><span class="sig-paren">(</span><em class="sig-param">model_type</em>, <em class="sig-param">params=None</em>, <em class="sig-param">keyword_args=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.building_blocks.EnsembleBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.building_blocks.ExplainerBlock">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.building_blocks.</code><code class="sig-name descname">ExplainerBlock</code><span class="sig-paren">(</span><em class="sig-param">explainer_type</em>, <em class="sig-param">params=None</em>, <em class="sig-param">kwargs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.building_blocks.ExplainerBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.building_blocks.ProcessingBlock">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.building_blocks.</code><code class="sig-name descname">ProcessingBlock</code><a class="headerlink" href="#Framework.building_blocks.ProcessingBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.building_blocks.ReduceBlock">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.building_blocks.</code><code class="sig-name descname">ReduceBlock</code><span class="sig-paren">(</span><em class="sig-param">reduce_model</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.building_blocks.ReduceBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-Framework.cluster"></span><p>Author : Koralp Catalsakal
+Date : 15/10/2019</p>
+<dl class="function">
+<dt id="Framework.cluster.clusterData">
+<code class="sig-prename descclassname">Framework.cluster.</code><code class="sig-name descname">clusterData</code><span class="sig-paren">(</span><em class="sig-param">model_func=None</em>, <em class="sig-param">data=None</em>, <em class="sig-param">label=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.cluster.clusterData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model agnostic method to be used in clustering. Can be used to try different models over datasets.
+Default setup accepts unsupervised dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_func</strong> (<em>Model.function</em>) – The specific model function to be used. The result of the function is
+returned in the model</p></li>
+<li><p><strong>data</strong> (<em>numpy.ndarray</em><em> or </em><em>pandas.DataFrame</em>) – Data to be used in training(Without the ground truth data)</p></li>
+<li><p><strong>label</strong> (<em>numpy.ndarray</em><em> or </em><em>pandas.DataFrame</em>) – Labels(Ground truth) of the data argument.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the fitted/trained model as output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>result(Model)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="Framework.cluster.convertOriginalData">
+<code class="sig-prename descclassname">Framework.cluster.</code><code class="sig-name descname">convertOriginalData</code><span class="sig-paren">(</span><em class="sig-param">data_dict</em>, <em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">no_val=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.cluster.convertOriginalData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the train/validation set split assignment to the DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dict</strong> (<em>pandas.DataFrame</em>) – Data with cluster assignments</p></li>
+<li><p><strong>X</strong> (<em>pandas.DataFrame</em>) – DataFrame that holds indexes of training and validation instances</p></li>
+<li><p><strong>y</strong> (<em>pandas.DataFrame</em>) – Target labels corresponding to training and validation instances</p></li>
+<li><p><strong>no_val</strong> (<em>bool</em>) – default is <cite>False</cite>. If <cite>False</cite>, all instances are used as training instances, and no validation split is used. Otherwise data is split</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>training data with train/validation split instances</p>
+<p>data_new(pandas.DataFrame) : label data with train/validation split instances</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data_new(pandas.DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="Framework.cluster.splitDataLabeled">
+<code class="sig-prename descclassname">Framework.cluster.</code><code class="sig-name descname">splitDataLabeled</code><span class="sig-paren">(</span><em class="sig-param">nClusters</em>, <em class="sig-param">data</em>, <em class="sig-param">cluster_labels</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.cluster.splitDataLabeled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenates cluster labels as an extra column to the existing DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – Data to be used in training(Without the ground truth data)</p></li>
+<li><p><strong>cluster_labels</strong> (<em>numpy.ndarray</em><em> or </em><em>pandas.DataFrame</em>) – Cluster assignments of each index stored in array format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns data with <cite>cluster</cite> column added</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>data_df(pandas.DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-Framework.custom_sklearn_pipeline"></span><dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.BuildingBlockPipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">BuildingBlockPipeline</code><a class="headerlink" href="#Framework.custom_sklearn_pipeline.BuildingBlockPipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.CustomPipelineModel">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">CustomPipelineModel</code><span class="sig-paren">(</span><em class="sig-param">notebook_mode</em>, <em class="sig-param">explainer_type</em>, <em class="sig-param">ensemble_type</em>, <em class="sig-param">nClusters</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.CustomPipelineModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>:description : Pipeline model for thesis</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.S10_Branch_Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">S10_Branch_Pipeline</code><span class="sig-paren">(</span><em class="sig-param">processing_block</em>, <em class="sig-param">explainer_block</em>, <em class="sig-param">reduce_block</em>, <em class="sig-param">cluster_block</em>, <em class="sig-param">ensemble_block</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.S10_Branch_Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.S11_Branch_Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">S11_Branch_Pipeline</code><span class="sig-paren">(</span><em class="sig-param">processing_block</em>, <em class="sig-param">explainer_block</em>, <em class="sig-param">reduce_block</em>, <em class="sig-param">cluster_block</em>, <em class="sig-param">ensemble_block</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.S11_Branch_Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.S1_Branch_Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">S1_Branch_Pipeline</code><span class="sig-paren">(</span><em class="sig-param">processing_block</em>, <em class="sig-param">explainer_block</em>, <em class="sig-param">cluster_block</em>, <em class="sig-param">ensemble_block</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.S1_Branch_Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.S2_Branch_Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">S2_Branch_Pipeline</code><span class="sig-paren">(</span><em class="sig-param">processing_block</em>, <em class="sig-param">explainer_block</em>, <em class="sig-param">cluster_block</em>, <em class="sig-param">ensemble_block</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.S2_Branch_Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.S6_Branch_Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">S6_Branch_Pipeline</code><span class="sig-paren">(</span><em class="sig-param">processing_block</em>, <em class="sig-param">explainer_block</em>, <em class="sig-param">cluster_block</em>, <em class="sig-param">ensemble_block</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.S6_Branch_Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Framework.custom_sklearn_pipeline.S7_Branch_Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">Framework.custom_sklearn_pipeline.</code><code class="sig-name descname">S7_Branch_Pipeline</code><span class="sig-paren">(</span><em class="sig-param">processing_block</em>, <em class="sig-param">explainer_block</em>, <em class="sig-param">cluster_block</em>, <em class="sig-param">ensemble_block</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.custom_sklearn_pipeline.S7_Branch_Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-Framework.datasets"></span><span class="target" id="module-Framework.metrics"></span><p>Author : Koralp Catalsakal
+Date : 30/10/2019</p>
+<dl class="function">
+<dt id="Framework.metrics.ensembleRMSE">
+<code class="sig-prename descclassname">Framework.metrics.</code><code class="sig-name descname">ensembleRMSE</code><span class="sig-paren">(</span><em class="sig-param">sample_sizes</em>, <em class="sig-param">rmse_list</em><span class="sig-paren">)</span><a class="headerlink" href="#Framework.metrics.ensembleRMSE" title="Permalink to this definition">¶</a></dt>
+<dd><p>This metric correctly calculates the overall rmse value for an ensemble of trained models, with each model
+outputting an individual rmse value over it’s respective training set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_sizes</strong> (<em>list</em>) – A list of length of the respective datasets of each individual model
+to be trained on</p></li>
+<li><p><strong>rmse_list</strong> (<em>list</em>) – A list of rmse values of each individual model in the ensemble</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns the calculated ensemble rmse value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>actual_rmse(Double)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-Framework.models"></span><p>Author : Koralp Catalsakal
+Date : 25/11/2019</p>
+<span class="target" id="module-Framework.processing"></span><p>Author : Koralp Catalsakal
+Date : 12/02/2020</p>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Shapley-ML</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Koralp Catalsakal.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/source/Framework.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

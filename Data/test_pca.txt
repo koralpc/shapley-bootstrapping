@@ -79,4 +79,15 @@ Student_grades,0.542,0.610,0.659,5,Original-PCA,Linear,XGBoost
 Student_grades,0.583,0.610,0.622,5,Original-PCA,XGBoost,XGBoost
 Student_grades,0.542,0.610,0.511,5,Shapley-PCA,Linear,XGBoost
 Student_grades,0.583,0.610,0.634,5,Shapley-PCA,XGBoost,XGBoost
-Cholesterol,0.960,0.969,0.953,3,Original-PCA,XGBoost,XGBoost
+
+Admissions,1.657,1.583,0.807,3,Original-PCA,Linear,XGBoost
+Amazon,0.987,0.990,0.986,3,Original-PCA,Linear,XGBoost
+Boston,0.950,1.044,1.136,3,Original-PCA,Linear,XGBoost
+Crime,1.185,0.975,1.368,3,Original-PCA,Linear,XGBoost
+Diabetes,1.292,1.325,0.827,3,Original-PCA,Linear,XGBoost
+Fish_weights,0.577,0.784,0.606,3,Original-PCA,Linear,XGBoost
+Insurance,0.961,0.986,0.715,3,Original-PCA,Linear,XGBoost
+Nhanes,0.999,0.983,0.833,3,Original-PCA,Linear,XGBoost
+NYE_Airbnb,0.895,0.895,0.898,3,Original-PCA,Linear,XGBoost
+Student_grades,0.538,0.694,0.784,3,Original-PCA,Linear,XGBoost
+Amazon,186.666,164.017,192.728,3,Original-PCA,Linear,XGBoost
