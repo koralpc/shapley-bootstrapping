@@ -233,8 +233,8 @@ def cpu_act():
 
 def titanic_price():
     data,_,_,_ = datasets.get_dataset(41265).get_data()
-    X = data.iloc[:,:-1]
-    y = np.array(data.iloc[:,-1])
+    y = np.array(data.pop('Fare'))
+    X = data.copy()
     name = 'Titanic Price'
     return X,y,name
 

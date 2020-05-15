@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: shap-bootstrap
+Version: 0.0.5
+Summary: Software package for implementing shap-bootstrapping
+Home-page: https://github.com/koralpc/Shapley-Clustering
+Author: Koralp Catalsakal
+Author-email: mrkoralp@gmail.com
+License: UNKNOWN
+Description: This package consists of the software implementation of my thesis.     When imported, the top module name is `Framework`
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

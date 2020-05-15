@@ -37,11 +37,11 @@ def dimensional_reduce(method,data):
         explained_variance = 0
     return transformed_data,explained_variance
 
-def prepare_pipeline_data(X,y,test_proportion = 0.25):
+def prepare_pipeline_data(X,y,test_proportion = 0.25,random_state = 42):
     X = preprocessing.StandardScaler().fit_transform(X)
     #y = preprocessing.StandardScaler().fit_transform(y.reshape(-1,1))
     X = pd.DataFrame(X)
-    X_train,X_test,y_train,y_test = train_test_split(X,y, test_size = test_proportion,random_state = 42)
+    X_train,X_test,y_train,y_test = train_test_split(X,y, test_size = test_proportion,random_state = random_state)
     X_train.reset_index(inplace = True)
     X_train.drop(['index'],axis = 1,inplace = True)
     X_test.reset_index(inplace = True)
