@@ -81,15 +81,71 @@ def visualize_pairvs_2(benchmark_df,branch1,branch2,label_opt = None,epsilon = 1
     if label_opt is None:
         ax2.set(xlabel='Better Performance',ylabel = 'Datasets',yticks = np.arange(bench_df_grouped_cat.shape[0]))
         ax2.set_yticklabels(list(bench_df_grouped_cat['Dataset_name']))
+        ax1.set(yticks = np.arange(0,bench_df_grouped_cat.shape[0],2))
         plt.show()
     else:
         label_opt_list = [label_opt[i] for i in bench_df_grouped['Comparison Winner']]
 
         ax1.set_xticklabels(label_opt_list)
         ax2.set_xticklabels(label_opt_list)
+        ax1.set(yticks = np.arange(0,bench_df_grouped_cat.shape[0],2))
         ax2.set(xlabel='Better Performance',ylabel = 'Datasets',yticks = np.arange(bench_df_grouped_cat.shape[0]))
         ax2.set_yticklabels(list(bench_df_grouped_cat['Dataset_name']))
         plt.show()
+
+    return ax1
+    
+
+def visualize_multiple_vs(benchmark_df,branch_list,label_opt = None,epsilon = 1e-03):
+    """[summary]
+    
+    Args:
+        benchmark_df ([type]): [description]
+        branch1 ([type]): [description]
+        branch2 ([type]): [description]
+        label_opt ([type], optional): [description]. Defaults to None.
+        epsilon ([type], optional): [description]. Defaults to 1e-03.
+    """    
+    i = 0
+    plt.figure(figsize = (30,10))
+    for eps in [0.01,0.001,0.0001]:
+        i += 1
+        plt.subplot(1,3,i)
+        benchmark_mins,benchmark_min_idx = get_branch_mins(benchmark_df)
+        benchmark_mins['Vs_results'] = benchmark_mins.apply(lambda x : label_vs_triple(x,branch_list,eps) ,axis = 1)
+        bench_df_grouped = benchmark_mins.groupby('Vs_results').agg({'Dataset_name':'nunique'})
+        bench_df_grouped.reset_index(inplace = True)
+        bench_df_grouped.sort_index(inplace = True)
+        bench_df_grouped.columns = ['Comparison Winner','Number of Wins']
+        bench_df_grouped_cat = benchmark_mins.groupby(['Dataset_name','Vs_results']).agg({'Dataset_name':'nunique'})
+        bench_df_grouped_cat.columns = ['Dataset Index']
+        bench_df_grouped_cat['Dataset Index'] = np.arange(bench_df_grouped_cat.shape[0])
+        bench_df_grouped_cat.reset_index(inplace = True)
+        ax1 = sns.barplot(y = 'Number of Wins',x = 'Comparison Winner',data = bench_df_grouped)
+        ax1.set_title('Comparison results with significance level σ: {}'.format(eps),fontsize = 24)
+        #ax2 = sns.catplot(x = 'Vs_results',y ='Dataset Index',hue = 'Dataset_name',data = bench_df_grouped_cat)
+    
+        if label_opt is None:
+           # ax2.set(xlabel='Better Performance',ylabel = 'Datasets',yticks = np.arange(bench_df_grouped_cat.shape[0]))
+           # ax2.set_yticklabels(list(bench_df_grouped_cat['Dataset_name']))
+            ax1.set(yticks = np.arange(0,bench_df_grouped_cat.shape[0],2))
+            ax1.set_ylabel("Comparison Winner",fontsize=22)
+            ax1.set_xlabel("Number of Wins",fontsize=22)
+            #plt.show()
+        else:
+            label_opt_list = [label_opt[i] for i in bench_df_grouped['Comparison Winner']]
+
+            ax1.set_xticklabels(label_opt_list)
+            ax1.set_ylabel("Comparison Winner",fontsize=22)
+            ax1.set_xlabel("Number of Wins",fontsize=22)
+            ax1.tick_params(labelsize=22)
+            #ax2.set_xticklabels(label_opt_list)
+            ax1.set(yticks = np.arange(0,bench_df_grouped_cat.shape[0],2))
+            #ax2.set(xlabel='Better Performance',ylabel = 'Datasets',yticks = np.arange(bench_df_grouped_cat.shape[0]))
+            #ax2.set_yticklabels(list(bench_df_grouped_cat['Dataset_name']))
+            #plt.show()
+    plt.tight_layout()
+    return ax1
 
 def _label_vs(row,branch1,branch2,epsilon = 1e-03):
     if abs(row[branch1] - row[branch2]) <= epsilon:
@@ -100,6 +156,13 @@ def _label_vs(row,branch1,branch2,epsilon = 1e-03):
         elif row[branch1] > row[branch2] :
             return branch2
 
+def label_vs_triple(row,branch_list,epsilon = 1e-03):
+    branch_array = np.asarray(branch_list)
+    benchmark_min_idx = row[branch_list].astype(float).idxmin()
+    for el in branch_array[branch_array != benchmark_min_idx]:
+        if abs(row[el] - row[benchmark_min_idx]) <= epsilon:
+            return 'Draw'
+    return benchmark_min_idx
 
 def dataset_stats(index_range):
     """[summary]
@@ -117,8 +180,6 @@ def dataset_stats(index_range):
 
     return dataset_features
 
-
-
 def scatter_datasets(benchmark_df,branch1,branch2,index_range = 20):
     """[summary]
     
@@ -131,19 +192,11 @@ def scatter_datasets(benchmark_df,branch1,branch2,index_range = 20):
     dataset_dictionary = dataset_stats(index_range)
     bench_b1_vs_b2 = utils.set_branch_best(benchmark_df,branch1,branch2)
     bench_b1_vs_b2['Vs_results'] = bench_b1_vs_b2.apply(lambda x : _label_vs(x,branch1,branch2) ,axis = 1)
-    #dataset_indices = bench_b1_vs_b2['Dataset_name'][bench_b1_vs_b2['Vs_results'] == branch2]
     bench_b1_vs_b2['Instances'] = bench_b1_vs_b2.apply(lambda x : dataset_dictionary[x['Dataset_name']]['Instances'] , axis = 1)
     bench_b1_vs_b2['Features'] = bench_b1_vs_b2.apply(lambda x : dataset_dictionary[x['Dataset_name']]['Features'] , axis = 1)
 
-    #dataset_indices =  np.unique(dataset_indices)
-    #instance_axis = []
-    #feature_axis = []
-    #for ind in dataset_indices:
-    #    vals = dataset_dictionary[ind]
-    #    instance_axis.append(vals['Instances'])
-    #    feature_axis.append(vals['Features'])
-
     sns.scatterplot(x = 'Instances',y = 'Features' , hue = 'Vs_results', data = bench_b1_vs_b2)
+    return dataset_dictionary
 
 def get_branch_mins(dataset):
     """[summary]

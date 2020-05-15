@@ -1,0 +1,27 @@
+index,Features,Instances
+Admissions,7,500
+Amazon,3,6454
+Boston,13,506
+Crime,101,1994
+Diabetes,10,442
+Fish_weights,6,159
+Insurance,6,1338
+Nhanes,18,8593
+NYE_Airbnb,8,38843
+Student_grades,32,395
+Liver_Disorder,5,345
+Satellite,36,6435
+Wine Quality,11,6497
+Banking Data,32,8192
+Balloon,1,2001
+Quake,3,2178
+Auto Price,68,201
+Friedman,10,40768
+Online News,58,39644
+Coil2000,85,9822
+Sales,14,10738
+Telecom,48,15000
+CPU Activity,12,8192
+Music Origin,117,1059
+Employee Accept,4,1000
+Soil Data,4,8641
