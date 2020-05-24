@@ -5,8 +5,6 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from sklearn import preprocessing, impute
 import numpy as np
-from sklearn.base import RegressorMixin
-from sklearn.base import BaseEstimator
 from sklearn.decomposition import PCA
 
 
@@ -220,9 +218,8 @@ class ExplainerBlock:
         return y_pred
 
 
-class ClusterBlock(BaseEstimator, RegressorMixin):
+class ClusterBlock:
     def __init__(self, nClusters, training_set_model, test_set_model):
-        # print('Clustering Block Constructed')
         self.n_clusters = nClusters
         self.training_set_model = training_set_model
         self.test_set_model = test_set_model
@@ -246,7 +243,7 @@ class ClusterBlock(BaseEstimator, RegressorMixin):
         return prediction
 
 
-class EnsembleBlock(BaseEstimator, RegressorMixin):
+class EnsembleBlock:
     def __init__(self, model_type, params=None, keyword_args=None):
         # print('Ensemble Models Constructed')
         self.eval_dict = {}
@@ -348,7 +345,7 @@ class EnsembleBlock(BaseEstimator, RegressorMixin):
         return y_pred
 
 
-class ReduceBlock(BaseEstimator, RegressorMixin):
+class ReduceBlock:
     def __init__(self, reduce_model):
         # print('Dimensionality Reduction Block Constructed')
         self.reduce_model = reduce_model

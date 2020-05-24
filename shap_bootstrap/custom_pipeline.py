@@ -1,20 +1,12 @@
-import sys
-
-sys.path.append("..")
-import seaborn as sns
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from Framework.models import ShapleyModel
-from Framework import cluster
-from sklearn.cluster import KMeans
-from Framework import datasets
-from Framework import utils
+from shap_bootstrap.models import ShapleyModel
+from shap_bootstrap import utils
 from sklearn.base import RegressorMixin
 from sklearn.base import BaseEstimator
 from sklearn.impute import SimpleImputer
-from Framework.building_blocks import *
+
 
 class BuildingBlockPipeline(BaseEstimator, RegressorMixin):
     def __init__(
@@ -364,22 +356,22 @@ class B8_Branch_Pipeline(BuildingBlockPipeline):
         self.shapley_values_reduced = self.reduce_block.fit_transform(
             self.shapley_values
         )
-        cluster_labels = self.cluster_block.cluster_training_instances(
+        self.cluster_labels = self.cluster_block.cluster_training_instances(
             self.shapley_values_reduced
         )
         X_train.columns = X.columns
         X_val.columns = X.columns
-        self.ensemble_block.train(X_train, X_val, y_train, y_val, cluster_labels)
+        self.ensemble_block.train(X_train, X_val, y_train, y_val, self.cluster_labels)
 
     def predict(self, X):
         X = self.processing_block.impute_data(X, scale=True)
         # X = pd.DataFrame(X)
         shapley_values_test = self.explainer_block.transform(X)
         shapley_values_test_reduced = self.reduce_block.transform(shapley_values_test)
-        cluster_labels_test = self.cluster_block.cluster_test_instances(
+        self.cluster_labels_test = self.cluster_block.cluster_test_instances(
             self.shapley_values_reduced, shapley_values_test_reduced
         )
-        y_pred = self.ensemble_block.predict(X, cluster_labels_test)
+        y_pred = self.ensemble_block.predict(X, self.cluster_labels_test)
         return y_pred
 
 

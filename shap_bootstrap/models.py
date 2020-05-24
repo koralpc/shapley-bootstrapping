@@ -13,8 +13,8 @@ from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import manhattan_distances
 from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
-from Framework import cluster
-from Framework import metrics
+from shap_bootstrap import cluster
+from shap_bootstrap import metrics
 from sklearn.neighbors import KNeighborsClassifier
 
 class ShapleyModel():
