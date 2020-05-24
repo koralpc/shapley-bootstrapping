@@ -82,7 +82,7 @@ class ProcessingBlock:
 
             return X_train, X_val
 
-    def impute_data(self, X, y=None,scale = False):
+    def impute_data(self, X, y=None, scale=False):
         """[Imputes missing instances in given data]
 
         Args:
@@ -197,7 +197,7 @@ class ExplainerBlock:
     def fit_transform(self, X, y, X_train, y_train, X_val, y_val):
         """[Fit and transform combined. Shortcut method if one wants to use `fit` and `transform`
            directly after each other]
-        """        
+        """
         self.fit(X, y, X_train, y_train, X_val, y_val)
         shapley_values = self.transform(X)
         return shapley_values
@@ -210,7 +210,7 @@ class ExplainerBlock:
 
         Returns:
             [np.array]: [Predictions]
-        """        
+        """
         if self.explainer_type == "Linear":
             y_pred = self.base_model.predict(X)
         if self.explainer_type == "XGBoost":
