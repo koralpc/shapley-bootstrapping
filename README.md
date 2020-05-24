@@ -8,7 +8,7 @@ Shapley bootstrapping is a novel machine learning methodology, that harmonizes e
 Shapley-bootstrapping can be installed via [PyPi](https://pypi.org/)
 
 ```
-pip install shap-bootstrapping
+pip install shap-bootstrap
 ```
 
 This library automatically installs the following dependancies:
