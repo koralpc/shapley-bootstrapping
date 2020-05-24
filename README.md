@@ -119,6 +119,7 @@ ax.legend(['Identity','RMSE = {:.2f}'.format(err)])
 
 ![Scatter plot of error](static/pred_scatter.png
 )
+
 *Plot of prediction error, blue dots is our model, red line is the best prediction*
 
 In the plot, we observe that other than couple outlier predictions our model fitted the data well.
@@ -142,4 +143,4 @@ Here, we see the features ranked descending by the sum of Shapley value magnitud
 With this capability, we can inspect on feature importances, which will aid the interpretability of the model.
 
 # Model-agnostic functionality
-The training pipelines take machine learning models as arguments in instantianation. Therefore, it is possible to run the experimentations with different models. TShap-bootstrap offers a flexbility in implementation.
+The training pipelines take machine learning models as arguments in instantianation. Therefore, it is possible to run the experimentations with different models. Shap-bootstrap offers a flexbility in implementation.
