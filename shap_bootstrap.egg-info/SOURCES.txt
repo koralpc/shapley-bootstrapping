@@ -1,5 +1,13 @@
+MANIFEST.in
 README.md
 setup.py
+Data/AB_NYC_2019.csv
+Data/Admission_Predict.csv
+Data/Fish.csv
+Data/amazon.csv
+Data/insurance.csv
+Data/stats_import_data.csv
+Data/student-mat.csv
 nbparameterise/__init__.py
 nbparameterise/code.py
 nbparameterise/code_drivers/__init__.py

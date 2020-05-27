@@ -1,0 +1,7 @@
+include Data/AB_NYC_2019.csv
+include Data/Admission_Predict.csv
+include Data/amazon.csv
+include Data/Fish.csv
+include Data/insurance.csv
+include Data/stats_import_data.csv
+include Data/student-mat.csv

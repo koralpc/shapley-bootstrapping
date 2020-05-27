@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="shap_bootstrap",  # Replace with your own username
-    version="0.0.6",
+    version="0.0.7",
     author="Koralp Catalsakal",
     author_email="mrkoralp@gmail.com",
     description="Software package for implementing shap-bootstrapping",
@@ -29,4 +29,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
+    include_package_data=True,
 )
