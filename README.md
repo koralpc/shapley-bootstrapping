@@ -29,7 +29,7 @@ This library automatically installs the following dependancies:
 # Overview
 This library includes the implementations of eight pipelines from [paper]. These pipelines are:
 
-![Thesis pipelines](/static/global-overview.png)
+![Thesis pipelines](shap_bootstrap/static/global-overview.png)
 
 Each of these pipelines are already implemented in the library(except 3 and 6, which are special cases) and can be directly used to train and predict over datasets.
 
@@ -61,7 +61,7 @@ These 5 building_block classes are:
 
 In an example below, we will implement Branch8 which uses dimensionality reduction, clustering and ensemble training using these building blocks.
 
-![Branch8 pipeline](static/branch8-pipeline2.png)
+![Branch8 pipeline](shap_bootstrap/static/branch8-pipeline2.png)
 *Workflow of branch8*
 
 
@@ -77,15 +77,15 @@ import math
 from shap_bootstrap.building_blocks import *
 from shap_bootstrap import datasets
 from shap_bootstrap.custom_pipeline import B1_Branch_Pipeline,B8_Branch_Pipeline
+from shap_bootstrap.utils import prepare_pipeline_data
 from sklearn.cluster import KMeans
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 
 # Returns boston dataset & train-test split
-X,y,name = datasets.returnDataset(9)
+X,y,name = datasets.student_grades()
 X_train,X_test,y_train,y_test = prepare_pipeline_data(X,y,random_state = 42)
-#X_train_8,X_test_8,y_train_8,y_test_8 = prepare_pipeline_data(X,y,random_state=42)
 
 # Building blocks to be used in pipeline
 # All algorithms can be changed with other models except PCA
@@ -125,6 +125,7 @@ This code snippet implements branch8, trains  over the `student_grades` dataset 
 # Evaluation of results (Effective)
 We can visualise model predictions via:
 ```python
+import matplotlib.pyplot as plt
 ax = plt.subplot()
 ax.scatter(x=y_test,y = y_pred_b1)
 ax.scatter(x = y_test,y = y_pred_b8)
@@ -136,7 +137,7 @@ new_labels = ['Identity', 'XGBoost Model - RMSE: {:.3f}'.format(err_b1), 'Shap-b
 ax.legend(new_labels)
 ```
 
-![Scatter plot of error](static/pred_scatter.png
+![Scatter plot of error](shap_bootstrap/static/pred_scatter.png
 )
 
 *Plot of prediction error, blue dots is our model, red line is the best prediction*
@@ -155,7 +156,7 @@ shap.summary_plot(explainer.shap_values(X_train),X_train,X.columns,max_display=1
 
 which outputs following plot :
 
-![Shapley sumamry plot](static/shap-summary-plot.png)
+![Shapley summary plot](shap_bootstrap/static/shap-summary-plot.png)
 
 Here, we see the features ranked descending by the sum of Shapley value magnitudes over all samples. Namely, they are ranked in feature importance top to bottom. For example, feature `G2` is positively correlated with output, such that high values of `G2` increase the output label and vice versa.
 

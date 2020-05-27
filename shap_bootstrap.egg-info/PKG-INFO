@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: shap-bootstrap
-Version: 0.0.7
+Version: 0.0.13
 Summary: Software package for implementing shap-bootstrapping
-Home-page: https://github.com/koralpc/Shapley-Clustering
+Home-page: https://github.com/koralpc/shapley-bootstrapping
 Author: Koralp Catalsakal
 Author-email: mrkoralp@gmail.com
 License: UNKNOWN
@@ -37,7 +37,7 @@ Description: # Shapley Bootstrapping
         # Overview
         This library includes the implementations of eight pipelines from [paper]. These pipelines are:
         
-        ![Thesis pipelines](/static/global-overview.png)
+        ![Thesis pipelines](shap_bootstrap/static/global-overview.png)
         
         Each of these pipelines are already implemented in the library(except 3 and 6, which are special cases) and can be directly used to train and predict over datasets.
         
@@ -69,7 +69,7 @@ Description: # Shapley Bootstrapping
         
         In an example below, we will implement Branch8 which uses dimensionality reduction, clustering and ensemble training using these building blocks.
         
-        ![Branch8 pipeline](static/branch8-pipeline2.png)
+        ![Branch8 pipeline](shap_bootstrap/static/branch8-pipeline2.png)
         *Workflow of branch8*
         
         
@@ -93,7 +93,6 @@ Description: # Shapley Bootstrapping
         # Returns boston dataset & train-test split
         X,y,name = datasets.returnDataset(9)
         X_train,X_test,y_train,y_test = prepare_pipeline_data(X,y,random_state = 42)
-        #X_train_8,X_test_8,y_train_8,y_test_8 = prepare_pipeline_data(X,y,random_state=42)
         
         # Building blocks to be used in pipeline
         # All algorithms can be changed with other models except PCA
@@ -144,7 +143,7 @@ Description: # Shapley Bootstrapping
         ax.legend(new_labels)
         ```
         
-        ![Scatter plot of error](static/pred_scatter.png
+        ![Scatter plot of error](shap_bootstrap/static/pred_scatter.png
         )
         
         *Plot of prediction error, blue dots is our model, red line is the best prediction*
@@ -163,7 +162,7 @@ Description: # Shapley Bootstrapping
         
         which outputs following plot :
         
-        ![Shapley sumamry plot](static/shap-summary-plot.png)
+        ![Shapley summary plot](shap_bootstrap/static/shap-summary-plot.png)
         
         Here, we see the features ranked descending by the sum of Shapley value magnitudes over all samples. Namely, they are ranked in feature importance top to bottom. For example, feature `G2` is positively correlated with output, such that high values of `G2` increase the output label and vice versa.
         

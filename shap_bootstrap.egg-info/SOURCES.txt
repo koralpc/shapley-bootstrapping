@@ -1,17 +1,5 @@
-MANIFEST.in
 README.md
 setup.py
-Data/AB_NYC_2019.csv
-Data/Admission_Predict.csv
-Data/Fish.csv
-Data/amazon.csv
-Data/insurance.csv
-Data/stats_import_data.csv
-Data/student-mat.csv
-nbparameterise/__init__.py
-nbparameterise/code.py
-nbparameterise/code_drivers/__init__.py
-nbparameterise/code_drivers/python.py
 shap_bootstrap/__init__.py
 shap_bootstrap/building_blocks.py
 shap_bootstrap/cluster.py
@@ -24,5 +12,6 @@ shap_bootstrap/visualisation.py
 shap_bootstrap.egg-info/PKG-INFO
 shap_bootstrap.egg-info/SOURCES.txt
 shap_bootstrap.egg-info/dependency_links.txt
+shap_bootstrap.egg-info/not-zip-safe
 shap_bootstrap.egg-info/requires.txt
 shap_bootstrap.egg-info/top_level.txt
