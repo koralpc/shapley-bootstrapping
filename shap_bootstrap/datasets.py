@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import shap
 from openml import datasets
+import pkg_resources
 
 
 def returnDataset(idx):
@@ -75,7 +76,9 @@ def nhanes():
 
 
 def fish_weights():
-    fish_df = pd.read_csv("../Data/Fish.csv")
+    stream = pkg_resources.resource_stream(__name__, 'data/Fish.csv')
+    fish_df = pd.read_csv(stream)
+    #fish_df = pd.read_csv("../Data/Fish.csv")
     X = fish_df.drop("Weight", axis=1)
     X_fac = pd.factorize(X["Species"])
     X["Species"] = X_fac[0]
@@ -85,7 +88,9 @@ def fish_weights():
 
 
 def nye_airbnb():
-    nye_df = pd.read_csv("../Data/AB_NYC_2019.csv")
+    stream = pkg_resources.resource_stream(__name__, 'data/AB_NYC_2019.csv')
+    nye_df = pd.read_csv(stream)
+    #nye_df = pd.read_csv("../Data/AB_NYC_2019.csv")
     nye_df.drop(
         ["id", "name", "host_id", "host_name", "latitude", "longitude", "last_review"],
         axis=1,
@@ -101,7 +106,9 @@ def nye_airbnb():
 
 
 def admissions():
-    admission_df = pd.read_csv("../Data/Admission_Predict.csv")
+    stream = pkg_resources.resource_stream(__name__, 'data/Admission_Predict.csv')
+    admission_df = pd.read_csv(stream)
+    #admission_df = pd.read_csv("../Data/Admission_Predict.csv")
     X = admission_df.drop(["Serial No.", "Chance of Admit "], axis=1)
     y = np.array(admission_df["Chance of Admit "])
     name = "Admissions"
@@ -109,7 +116,9 @@ def admissions():
 
 
 def student_grades():
-    grades_df = pd.read_csv("../Data/student-mat.csv")
+    stream = pkg_resources.resource_stream(__name__, 'data/student-mat.csv')
+    grades_df = pd.read_csv(stream)
+    #grades_df = pd.read_csv("../Data/student-mat.csv")
     grades_df["school"] = pd.factorize(grades_df["school"])[0]
     grades_df["sex"] = pd.factorize(grades_df["sex"])[0]
     grades_df["address"] = pd.factorize(grades_df["address"])[0]
@@ -134,7 +143,9 @@ def student_grades():
 
 
 def amazon():
-    amazon_df = pd.read_csv("../Data/amazon.csv")
+    stream = pkg_resources.resource_stream(__name__, 'data/amazon.csv')
+    amazon_df = pd.read_csv(stream)
+    #amazon_df = pd.read_csv("../Data/amazon.csv")
     amazon_df["state"] = pd.factorize(amazon_df["state"])[0]
     amazon_df["month"] = pd.factorize(amazon_df["month"])[0]
     X = amazon_df.drop(["date", "number"], axis=1)
@@ -144,7 +155,9 @@ def amazon():
 
 
 def insurance():
-    insurance_df = pd.read_csv("../Data/insurance.csv")
+    stream = pkg_resources.resource_stream(__name__, 'data/insurance.csv')
+    insurance_df = pd.read_csv(stream)
+    #insurance_df = pd.read_csv("../Data/insurance.csv")
     insurance_df["sex"] = pd.factorize(insurance_df["sex"])[0]
     insurance_df["smoker"] = pd.factorize(insurance_df["smoker"])[0]
     insurance_df["region"] = pd.factorize(insurance_df["region"])[0]
