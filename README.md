@@ -86,7 +86,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 
-# Returns boston dataset & train-test split
+# Returns student_grades dataset & train-test split
 X,y,name = datasets.student_grades()
 X_train,X_test,y_train,y_test = prepare_pipeline_data(X,y,random_state = 42)
 
