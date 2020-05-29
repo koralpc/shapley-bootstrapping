@@ -86,7 +86,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 
-# Returns boston dataset & train-test split
+# Returns student_grades dataset & train-test split
 X,y,name = datasets.student_grades()
 X_train,X_test,y_train,y_test = prepare_pipeline_data(X,y,random_state = 42)
 
@@ -102,7 +102,7 @@ explainer_block_b1 = ExplainerBlock(explainer_type_b1)
 cluster_block_b1 = ClusterBlock(nClusters,KMeans(n_clusters = nClusters,random_state = 0),KNeighborsClassifier(n_neighbors = nClusters))
 ensemble_block_b1 = EnsembleBlock(model_type)
 
-# Instantianate Branch 8 pipeline
+# Instantianate Branch 1 pipeline
 branch1 = B1_Branch_Pipeline(processing_block_b1,explainer_block_b1,cluster_block_b1,ensemble_block_b1)
 
 processing_block_b8 = ProcessingBlock()
