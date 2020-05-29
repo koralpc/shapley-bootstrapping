@@ -31,5 +31,5 @@ setuptools.setup(
     python_requires=">=3.6",
     include_package_data=True,
     zip_safe=False,
-    package_data={'': ['data/*.csv','static/*.png']},
+    package_data={'': ['data/*.csv', 'static/*.png']},
 )

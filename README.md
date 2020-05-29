@@ -1,8 +1,11 @@
 # Shapley Bootstrapping
 
 - [x]   Flexible
-- [x]   Effective
+   - Provides building blocks for constructing a pipeline. Workflow of pipelines and machine learning models used in the pipeline are defined by user choice.
+- [x]   Effective 
+  -   Improves prediction performance via Shapley values and clustering based ensemble training.
 - [x]   Explainable
+   - Uses Shapley values for explaining machine learning models.
 
 Shapley bootstrapping is a novel machine learning methodology that harmonizes ensemble learners with Shapley values. For detailed explanation, see my [thesis].
 
