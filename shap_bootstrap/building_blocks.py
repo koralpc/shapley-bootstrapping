@@ -60,11 +60,6 @@ class ProcessingBlock:
             self.train_idx = X_train.index
             self.val_idx = X_val.index
 
-            # X_train.reset_index(inplace = True)
-            # X_train = X_train.drop(['index'],axis = 1)
-            # X_val.reset_index(inplace = True)
-            # X_val = X_val.drop(['index'],axis = 1)
-
             return X_train, X_val, y_train, y_val
         else:
             X_df = pd.DataFrame(X)
@@ -220,24 +215,60 @@ class ExplainerBlock:
 
 class ClusterBlock:
     def __init__(self, nClusters, training_set_model, test_set_model):
+        """[Instantiates the cluster block object]
+
+        Args:
+            nClusters ([int]): [Number of clusters]
+            training_set_model ([Model]): [Unsupervised clustering algorithm (K-Means suggested)]
+            test_set_model ([Model]): [Supervised classification algorithm(K-NN suggested) ]
+        """
         self.n_clusters = nClusters
         self.training_set_model = training_set_model
         self.test_set_model = test_set_model
 
     def fit(self, X, y):
+        """[Currently not used]
+
+        Args:
+            X ([np.array or pd.DataFrame]): [Input features]
+            y ([np.array or pd.DataFrame]): [Input labels]
+
+        Returns:
+            [self]: [ClusterBlock object]
+        """
         self.X = X
         self.y = y
         return self
 
-    def transform(self, X):
-        print("transform")
+    def transform(self):
+        """[Currently unused]
+        """
         pass
 
     def cluster_training_instances(self, X):
+        """[Executes the unsupervised clustering algorithm 
+            (defined by user at object construction) over input features]
+
+        Args:
+            X ([np.array or pd.DataFrame]): [Input features]
+
+        Returns:
+            [np.array]: [Cluster labels of instances]
+        """
         self.training_set_model.fit(X)
         return self.training_set_model.labels_
 
     def cluster_test_instances(self, X, X_test):
+        """[Executes the supervised classification algorithm
+            (defined by user at object construction) over input features]
+
+        Args:
+            X ([np.array or pd.DataFrame]): [Input features that are used in clustering algorithm]
+            X_test ([np.array or pd.DataFrame]): [Test features to be classified]
+
+        Returns:
+            [np.array]: [Cluster label predictions of test instances]
+        """
         self.test_set_model.fit(X, self.training_set_model.labels_)
         prediction = self.test_set_model.predict(X_test)
         return prediction
@@ -245,7 +276,13 @@ class ClusterBlock:
 
 class EnsembleBlock:
     def __init__(self, model_type, params=None, keyword_args=None):
-        # print('Ensemble Models Constructed')
+        """[Instantiates the EnsembleBlock object]
+
+        Args:
+            model_type ([str]): [Currently 'Linear' or 'XGBoost' accepted]
+            params ([dict], optional): [Parameters for custom XGBoost models]. Defaults to None.
+            keyword_args ([dict], optional): [Keyword arguments for custom XGBoost models]. Defaults to None.
+        """
         self.eval_dict = {}
         self.model_dict = {}
         self.model_type = model_type
@@ -272,10 +309,21 @@ class EnsembleBlock:
         else:
             self.keyword_args = keyword_args
 
-    def fit(self, X, y):
+    def fit(self):
+        """[Currently unused]
+        """
         pass
 
     def train(self, X_train, X_val, y_train, y_val, cluster_labels):
+        """[Trains the ensemble learner over training data]
+
+        Args:
+            X_train ([np.array or pd.DataFrame]): [Training set]
+            X_val ([np.array or pd.DataFrame]): [Validation set]
+            y_train ([np.array or pd.DataFrame]): [Training labels]
+            y_val ([np.array or pd.DataFrame]): [Validation labels]
+            cluster_labels ([np.array]): [Cluster labels of instances (assigned by ClusterBlock)]
+        """
         if self.model_type == "Linear":
             for i in range(len(np.unique(cluster_labels))):
                 c_idx = cluster_labels == i
@@ -327,6 +375,15 @@ class EnsembleBlock:
                     ]
 
     def predict(self, X_test, cluster_labels):
+        """[Predicts target values of test instances]
+
+        Args:
+            X_test ([np.array or pd.DataFrame]): [Test set]
+            cluster_labels ([np.array]): [Cluster labels of instances (assigned by cluster block)]
+
+        Returns:
+            [np.array]: [Predictions of the ensemble model]
+        """
         y_pred = np.zeros(shape=(X_test.shape[0],))
         for i in range(len(np.unique(cluster_labels))):
             if (cluster_labels == i).any():
@@ -347,12 +404,20 @@ class EnsembleBlock:
 
 class ReduceBlock:
     def __init__(self, reduce_model):
+        """[Instantiates the ReduceBlock object]
+
+        Args:
+            reduce_model ([Model]): [Dimensionality reduction algorithm. Currently unused and this block uses PCA as default algorithm.]
+        """
         # print('Dimensionality Reduction Block Constructed')
         self.reduce_model = reduce_model
 
     def fit(self, X):
-        # from sklearn.decomposition import PCA
+        """[Fits the dimensionality reduction model to input data.]
 
+        Args:
+            X ([np.array or pd.DataFrame]): [Input features]
+        """
         explained_var_ratio = 0
         k = 1
         n_features = X.shape[1]
@@ -365,10 +430,26 @@ class ReduceBlock:
         self.reduce_model = pca
 
     def transform(self, X):
+        """[Transforms input data via PCA projection]
+
+        Args:
+            X ([np.array or pd.DataFrame]): [Input data]
+
+        Returns:
+            [np.array]: [PCA projected feature space]
+        """
         X_reduced = self.reduce_model.transform(X)
         return X_reduced
 
     def fit_transform(self, X):
+        """[Fit & transform models combined together.]
+
+        Args:
+            X ([np.array or pd.DataFrame]): [Input data]
+
+        Returns:
+            [np.array]: [PCA projected features.]
+        """
         self.fit(X)
         X_reduced = self.transform(X)
         return X_reduced
