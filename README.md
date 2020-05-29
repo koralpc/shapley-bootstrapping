@@ -102,7 +102,7 @@ explainer_block_b1 = ExplainerBlock(explainer_type_b1)
 cluster_block_b1 = ClusterBlock(nClusters,KMeans(n_clusters = nClusters,random_state = 0),KNeighborsClassifier(n_neighbors = nClusters))
 ensemble_block_b1 = EnsembleBlock(model_type)
 
-# Instantianate Branch 8 pipeline
+# Instantianate Branch 1 pipeline
 branch1 = B1_Branch_Pipeline(processing_block_b1,explainer_block_b1,cluster_block_b1,ensemble_block_b1)
 
 processing_block_b8 = ProcessingBlock()
