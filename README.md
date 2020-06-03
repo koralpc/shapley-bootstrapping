@@ -17,7 +17,7 @@ Shapley-bootstrapping can be installed via [PyPi](https://pypi.org/)
 pip install shap-bootstrap
 ```
 
-This library automatically installs the following dependancies:
+This library automatically installs the following dependencies:
 
     1.scipy
     2.pandas
