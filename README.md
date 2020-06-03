@@ -143,7 +143,7 @@ ax.legend(new_labels)
 ![Scatter plot of error](shap_bootstrap/static/pred_scatter.png
 )
 
-*Plot of prediction error, blue dots is our model, red line is the best prediction*
+*Plot of prediction error: blue dots is XGBoost model, orange dots is Shapley-bootstrapping pipeline and red line is the best prediction*
 
 In the plot, we observe that our proposed methodology can improve the performance of an existing XGBoost model, by fitting the data better (Orange points lie closer to the identity line). We improved the RMSE value by 5\%, but this is not a major improvement.
 
